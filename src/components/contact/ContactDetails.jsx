@@ -3,13 +3,15 @@ import { FiPhone, FiMapPin, FiMail } from 'react-icons/fi';
 const contacts = [
 	{
 		id: 1,
-		name: 'Your Address, Your City, Your Country',
+		name: 'Bandung, Indonesia',
 		icon: <FiMapPin />,
+    link: 'https://goo.gl/maps/uY2LTRZLEZjuM9c49'
 	},
 	{
 		id: 2,
 		name: 'email@domain.com',
 		icon: <FiMail />,
+    link: 'mailto:myubash@gmail.com'
 	},
 	{
 		id: 3,
@@ -29,7 +31,13 @@ const ContactDetails = () => {
 					{contacts.map((contact) => (
 						<li className="flex " key={contact.id}>
 							<i className="text-2xl text-gray-500 dark:text-gray-400 mr-4">
-								{contact.icon}
+								{
+                  contact.link
+                    ? <a href={contact.link} className='hover:text-blue-400'>
+                        {contact.icon}
+                      </a>
+                    : contact.icon
+                }
 							</i>
 							<span className="text-lg mb-4 text-ternary-dark dark:text-ternary-light">
 								{contact.name}

@@ -1,13 +1,46 @@
+import {useState} from 'react'
 import Button from '../reusable/Button';
 import FormInput from '../reusable/FormInput';
 
 const ContactForm = () => {
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+
+  const handleChangeInput = (key, value) => {
+    setForm({
+      ...form,
+      [key]: value
+    })
+  }
+
+  const onSubmit = () => {
+    // convert to mailto
+    // example: mailto:myubash@gmail.com?subject=Inquiry%20about%20offering&body=Lorem%20ipsum%20sit%20amet%20dolor%0D%0A%0D%0A-%20Your%20name
+    const {
+      name, email, subject, message
+    } = form
+    const myMail = 'myubash@gmail.com'
+    const body = 
+    `From: ${email}
+${message}
+    
+- ${name}`
+    const uri = encodeURI(`mailto:${myMail}?subject=${subject}&body=${body}`)
+    window.open(uri, '_blank');
+
+  }
+
 	return (
 		<div className="w-full lg:w-1/2">
 			<div className="leading-loose">
 				<form
 					onSubmit={(e) => {
 						e.preventDefault();
+            onSubmit()
 					}}
 					className="max-w-xl m-4 p-6 sm:p-10 bg-secondary-light dark:bg-secondary-dark rounded-xl shadow-xl text-left"
 				>
@@ -22,6 +55,8 @@ const ContactForm = () => {
 						inputName="name"
 						placeholderText="Your Name"
 						ariaLabelName="Name"
+            onChange={handleChangeInput}
+            value={form.name}
 					/>
 					<FormInput
 						inputLabel="Email"
@@ -31,6 +66,8 @@ const ContactForm = () => {
 						inputName="email"
 						placeholderText="Your email"
 						ariaLabelName="Email"
+            onChange={handleChangeInput}
+            value={form.email}
 					/>
 					<FormInput
 						inputLabel="Subject"
@@ -40,6 +77,8 @@ const ContactForm = () => {
 						inputName="subject"
 						placeholderText="Subject"
 						ariaLabelName="Subject"
+            onChange={handleChangeInput}
+            value={form.subject}
 					/>
 
 					<div className="mt-6">
@@ -56,6 +95,8 @@ const ContactForm = () => {
 							cols="14"
 							rows="6"
 							aria-label="Message"
+              onChange={(e) => handleChangeInput('message', e.target.value)}
+              value={form.message}
 						></textarea>
 					</div>
 
@@ -64,6 +105,7 @@ const ContactForm = () => {
 							title="Send Message"
 							type="submit"
 							aria-label="Send Message"
+              onClick={onSubmit}
 						/>
 					</div>
 				</form>

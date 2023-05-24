@@ -1,11 +1,57 @@
+import {useEffect, useState} from 'react'
 import useThemeSwitcher from '../../hooks/useThemeSwitcher';
 import { FiArrowDownCircle } from 'react-icons/fi';
-import developerLight from '../../images/developer.svg';
-import developerDark from '../../images/developer-dark.svg';
+// import developerLight from '../../images/developer.svg';
+// import developerDark from '../../images/developer-dark.svg';
+import coding from '../../images/coding.svg';
 import { motion } from 'framer-motion';
 
+const professionList = [
+  'MERN Full Stack',
+  'AWS Cloud',
+  'Web GIS'
+]
+const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+      // subtitle.innerText = subtitle.innerText.split('')
+      // .map(letter => letters[Math.floor(Math.random() * 26)])
+      // .join('')
+
 const AppBanner = () => {
-	const [activeTheme] = useThemeSwitcher();
+	// const [activeTheme] = useThemeSwitcher();
+  const [professionIndex, setProfessionIndex] = useState(0)
+
+  useEffect(() => {
+    const myInterval = setInterval(async () => {
+      let _professionIndex = professionIndex
+      _professionIndex = professionIndex < professionList.length - 1 ? _professionIndex += 1 : 0
+      setProfessionIndex(_professionIndex)
+      onMouseOverProfession(_professionIndex)
+    }, 2000)
+
+    return () => {
+      clearInterval(myInterval)
+    }
+  }, [professionIndex])
+
+  const onMouseOverProfession = (_professionIndex) => {
+    let loop = 0
+    const subtitleInterval = setInterval(() => {
+      const text = document.getElementById('subtitle')
+      const currentIndex = typeof(_professionIndex) === 'number' ? _professionIndex : professionIndex
+      const profession = professionList[currentIndex]
+      text.innerText = text.innerText.split('')
+      .map((letter, idx) => {
+        if (idx < loop){
+          return professionList[currentIndex][idx]
+        }
+        return letters[Math.floor(Math.random() * 26)]
+      })
+      .join('')
+      if (loop > profession.length) clearInterval(subtitleInterval)
+      loop += 1
+    }, 50)
+  }
 
 	return (
 		<motion.section
@@ -25,7 +71,7 @@ const AppBanner = () => {
 					}}
 					className="font-general-semibold text-2xl lg:text-3xl xl:text-4xl text-center sm:text-left text-ternary-dark dark:text-primary-light uppercase"
 				>
-					Hi, Iam Stoman
+					Hi, I am Yusuf
 				</motion.h1>
 				<motion.p
 					initial={{ opacity: 0 }}
@@ -37,7 +83,7 @@ const AppBanner = () => {
 					}}
 					className="font-general-medium mt-4 text-lg md:text-xl lg:text-2xl xl:text-3xl text-center sm:text-left leading-normal text-gray-500 dark:text-gray-200"
 				>
-					A Full-Stack Developer & Design Enthusiast
+					<span id='subtitle' style={{color: '#dcdfe6', background: '#6d7c9c'}} onMouseOver={onMouseOverProfession}>{professionList[professionIndex]}</span> <br/> Developer
 				</motion.p>
 				<motion.div
 					initial={{ opacity: 0 }}
@@ -50,8 +96,8 @@ const AppBanner = () => {
 					className="flex justify-center sm:block"
 				>
 					<a
-						download="Stoman-Resume.pdf"
-						href="/files/Stoman-Resume.pdf"
+						download="Yusuf-Resume.pdf"
+						href="/files/my-resume.pdf"
 						className="font-general-medium flex justify-center items-center w-36 sm:w-48 mt-12 mb-6 sm:mb-0 text-lg border border-indigo-200 dark:border-ternary-dark py-2.5 sm:py-3 shadow-lg rounded-lg bg-indigo-50 focus:ring-1 focus:ring-indigo-900 hover:bg-indigo-500 text-gray-500 hover:text-white duration-500"
 						aria-label="Download Resume"
 					>
@@ -70,7 +116,8 @@ const AppBanner = () => {
 			>
 				<img
 					src={
-						activeTheme === 'dark' ? developerLight : developerDark
+						// activeTheme === 'dark' ? developerLight : developerDark
+            coding
 					}
 					alt="Developer"
 				/>
