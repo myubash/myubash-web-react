@@ -1,15 +1,50 @@
+import {useState} from 'react'
 import { motion } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 import Button from './reusable/Button';
+import sendMail from '../tools/sendmail'
+import validateData from '../tools/validateData'
 
 const selectOptions = [
-	'Web Application',
-	'Mobile Application',
-	'UI/UX Design',
-	'Branding',
+  '',
+	'Web Application'
 ];
 
-const HireMeModal = ({ onClose, onRequest }) => {
+const HireMeModal = ({ onClose }) => {
+  const defaultForm = {
+    name: '',
+    email: '',
+    type: '',
+    description: ''
+  }
+
+  const [form, setForm] = useState(defaultForm)
+
+  const handleChange = (name, value) => {
+    setForm({
+      ...form,
+      [name]: value
+    })
+  }
+
+  const onCloseModal = () => {
+    setForm(defaultForm)
+    onClose()
+  }
+
+  const onSubmit = () => {
+    const { name, email, type, description }  = form
+    if (!name || !validateData.validateEmail(email) || !type) return null
+    const subject = `Hi! I'm looking to discuss on a project about ${type}`
+    const message = description
+    sendMail({
+      name,
+      email,
+      subject,
+      message
+    })
+  }
+
 	return (
 		<motion.div
 			initial={{ opacity: 0 }}
@@ -29,7 +64,7 @@ const HireMeModal = ({ onClose, onRequest }) => {
 								What project are you looking for?
 							</h5>
 							<button
-								onClick={onClose}
+								onClick={onCloseModal}
 								className="px-4 font-bold text-primary-dark dark:text-primary-light"
 							>
 								<FiX className="text-3xl" />
@@ -39,6 +74,7 @@ const HireMeModal = ({ onClose, onRequest }) => {
 							<form
 								onSubmit={(e) => {
 									e.preventDefault();
+                  onSubmit()
 								}}
 								className="max-w-xl m-4 text-left"
 							>
@@ -48,9 +84,10 @@ const HireMeModal = ({ onClose, onRequest }) => {
 										id="name"
 										name="name"
 										type="text"
-										required=""
+										required
 										placeholder="Name"
 										aria-label="Name"
+                    onChange={(e) => handleChange('name', e.target.value)}
 									/>
 								</div>
 								<div className="mt-6">
@@ -58,20 +95,22 @@ const HireMeModal = ({ onClose, onRequest }) => {
 										className="w-full px-5 py-2 border dark:border-secondary-dark rounded-md text-md bg-secondary-light dark:bg-ternary-dark text-primary-dark dark:text-ternary-light"
 										id="email"
 										name="email"
-										type="text"
-										required=""
+										type="email"
+										required
 										placeholder="Email"
 										aria-label="Email"
+                    onChange={(e) => handleChange('email', e.target.value)}
 									/>
 								</div>
 								<div className="mt-6">
 									<select
 										className="w-full px-5 py-2 border dark:border-secondary-dark rounded-md text-md bg-secondary-light dark:bg-ternary-dark text-primary-dark dark:text-ternary-light"
-										id="subject"
-										name="subject"
+										id="type"
+										name="type"
 										type="text"
-										required=""
+										required
 										aria-label="Project Category"
+                    onChange={(e) => handleChange('type', e.target.value)}
 									>
 										{selectOptions.map((option) => (
 											<option
@@ -93,12 +132,13 @@ const HireMeModal = ({ onClose, onRequest }) => {
 										rows="6"
 										aria-label="Details"
 										placeholder="Project description"
+                    onChange={(e) => handleChange('description', e.target.value)}
 									></textarea>
 								</div>
 
 								<div className="mt-6 pb-4 sm:pb-1">
 									<span
-										onClick={onClose}
+										onClick={onSubmit}
 										type="submit"
 										className="px-4
 											sm:px-6
@@ -118,7 +158,7 @@ const HireMeModal = ({ onClose, onRequest }) => {
 						</div>
 						<div className="modal-footer mt-2 sm:mt-0 py-5 px-8 border0-t text-right">
 							<span
-								onClick={onClose}
+								onClick={onCloseModal}
 								type="button"
 								className="px-4
 									sm:px-6

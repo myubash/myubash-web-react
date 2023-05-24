@@ -9,13 +9,13 @@ const contacts = [
 	},
 	{
 		id: 2,
-		name: 'email@domain.com',
+		name: 'myubash@gmail.com',
 		icon: <FiMail />,
     link: 'mailto:myubash@gmail.com'
 	},
 	{
 		id: 3,
-		name: '555 8888 888',
+		name: '+6281646839146',
 		icon: <FiPhone />,
 	},
 ];
